@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import { X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { SlideRenderer } from "@/components/SlideRenderer";
@@ -16,12 +17,14 @@ function SlideGridOverlay({
     slides,
     currentIndex,
     density,
+    deckMeta,
     onSelect,
     onClose,
 }: {
     slides: LooseSlide[];
     currentIndex: number;
     density: DensityMode;
+    deckMeta: Record<string, string>;
     onSelect: (i: number) => void;
     onClose: () => void;
 }) {
@@ -93,7 +96,7 @@ function SlideGridOverlay({
                                             transformOrigin: "top left",
                                         }}
                                     >
-                                        <SlideRenderer slide={slide} density={density} />
+                                        <SlideRenderer slide={slide} density={density} deckMeta={deckMeta} />
                                     </div>
 
                                     {/* Current slide highlight overlay */}
@@ -131,37 +134,35 @@ function SpeakerNotesOverlay({
 }) {
     return (
         <motion.div
-            className="fixed inset-0 z-40 flex items-center justify-center"
-            style={{ background: "rgba(13,34,64,0.75)", backdropFilter: "blur(4px)" }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            onClick={onClose}
+            className="fixed inset-x-0 bottom-0 z-40 h-[35vh] bg-gray-900/95 shadow-[0_-10px_40px_rgba(0,0,0,0.3)] border-t border-white/10"
+            initial={{ y: "100%" }}
+            animate={{ y: 0 }}
+            exit={{ y: "100%" }}
+            transition={{ duration: 0.35, ease: [0.32, 0, 0.67, 0] }}
+            onClick={(e) => e.stopPropagation()}
         >
-            <motion.div
-                className="bg-white rounded-2xl p-8 max-w-2xl w-full mx-6 shadow-2xl"
-                initial={{ scale: 0.95, y: 10 }}
-                animate={{ scale: 1, y: 0 }}
-                exit={{ scale: 0.95, y: 10 }}
-                transition={{ duration: 0.2 }}
-                onClick={(e) => e.stopPropagation()}
-            >
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#1B8FE0] mb-4">
-                    Speaker Notes
-                </p>
-                <p className="text-[#0D2240] text-base leading-relaxed">
-                    {notes || (
-                        <span className="text-gray-400 italic">No speaker notes for this slide.</span>
-                    )}
-                </p>
-                <button
-                    onClick={onClose}
-                    className="mt-6 text-xs text-gray-400 hover:text-gray-600 transition-colors"
-                >
-                    Press N or click outside to close
-                </button>
-            </motion.div>
+            <div className="max-w-4xl mx-auto w-full h-full flex flex-col p-8">
+                <div className="flex justify-between items-center mb-6 shrink-0">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#1B8FE0]">
+                        Speaker Notes
+                    </p>
+                    <button
+                        onClick={onClose}
+                        className="text-white/50 hover:text-white transition-colors bg-white/5 hover:bg-white/10 p-1.5 rounded-lg"
+                        aria-label="Close notes"
+                    >
+                        <X className="w-5 h-5" />
+                    </button>
+                </div>
+
+                <div className="flex-1 overflow-y-auto pr-4 custom-scrollbar">
+                    <p className="text-white/90 text-lg leading-relaxed whitespace-pre-wrap">
+                        {notes || (
+                            <span className="text-white/40 italic">No speaker notes for this slide.</span>
+                        )}
+                    </p>
+                </div>
+            </div>
         </motion.div>
     );
 }
@@ -319,18 +320,18 @@ export function PresentationClient({ deck, deckId }: PresentationClientProps) {
                         exit="exit"
                         transition={{ duration: 0.35, ease: [0.32, 0, 0.67, 0] }}
                     >
-                        <SlideRenderer slide={currentSlide} density={density} />
+                        <SlideRenderer slide={currentSlide} density={density} deckMeta={deck.meta} />
                     </motion.div>
                 </AnimatePresence>
 
                 {/* Click zones — invisible, no hover state */}
                 <div
-                    className="absolute top-0 left-0 h-full w-[30%] z-20 cursor-pointer"
+                    className="absolute top-0 left-0 h-full w-[15%] z-20 cursor-pointer"
                     onClick={() => navigate(-1)}
                     aria-label="Previous slide"
                 />
                 <div
-                    className="absolute top-0 right-0 h-full w-[30%] z-20 cursor-pointer"
+                    className="absolute top-0 right-0 h-full w-[15%] z-20 cursor-pointer"
                     onClick={() => navigate(1)}
                     aria-label="Next slide"
                 />
@@ -369,6 +370,7 @@ export function PresentationClient({ deck, deckId }: PresentationClientProps) {
                         slides={slides}
                         currentIndex={currentIndex}
                         density={density}
+                        deckMeta={deck.meta}
                         onSelect={(i) => { goTo(i); setShowGrid(false); }}
                         onClose={() => setShowGrid(false)}
                     />

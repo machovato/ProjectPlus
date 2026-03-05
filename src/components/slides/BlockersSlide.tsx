@@ -42,11 +42,10 @@ function getInitials(name: string) {
     return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
 }
 
-export function BlockersSlide({ slide }: { slide: LooseSlide }) {
+export function BlockersSlide({ slide, deckMeta }: { slide: LooseSlide; deckMeta?: Record<string, string> }) {
     const data = (slide.data ?? { items: [] }) as unknown as BlockersData;
     const items = data.items ?? [];
-    const slideWithMeta = slide as unknown as { meta?: Record<string, string> };
-    const meta = slideWithMeta.meta || {};
+    const meta = deckMeta ?? {};
 
     const actions = items.filter((i) => i.severity === "action").length;
     const approvals = items.filter((i) => i.severity === "approval").length;
@@ -133,8 +132,8 @@ export function BlockersSlide({ slide }: { slide: LooseSlide }) {
             <p className="text-sm text-[#6D6E71]">The team is unblocked and moving forward.</p>
         </motion.div>
     ) : (
-        <div className="flex flex-col h-full bg-[#FAFAFA]">
-            <div className="flex flex-col gap-4 w-full h-[calc(100%-80px)] overflow-y-auto px-[clamp(24px,4vw,64px)] pt-[clamp(24px,4vw,64px)] pb-8 relative z-10">
+        <div className="flex flex-col h-full bg-[#FAFAFA] overflow-hidden">
+            <div className="flex-1 min-h-0 flex flex-col gap-4 w-full overflow-y-auto px-[clamp(24px,4vw,64px)] pt-[clamp(24px,4vw,64px)] pb-8 relative z-10">
                 {items.map((item, i) => {
                     const cfg = SEVERITY_CONFIG[item.severity] ?? SEVERITY_CONFIG.fyi;
                     return (
@@ -212,12 +211,6 @@ export function BlockersSlide({ slide }: { slide: LooseSlide }) {
                     <span className="text-[10px] uppercase tracking-[0.15em] text-[#757575] font-bold">Active Sprint</span>
                     <span className="text-sm font-bold text-[#0D2240]">{meta.subtitle || "Sprint Phase"}</span>
                 </div>
-                <div className="flex items-center gap-4 w-48">
-                    <div className="flex-1 h-1.5 bg-[#E0E0E0] rounded-full overflow-hidden">
-                        <div className="h-full bg-[#1B8FE0] w-1/4 rounded-full" />
-                    </div>
-                    <span className="text-[11px] font-bold text-[#757575]">0% Progress</span>
-                </div>
             </div>
         </div>
     );
@@ -227,6 +220,8 @@ export function BlockersSlide({ slide }: { slide: LooseSlide }) {
             leftContent={left}
             rightContent={right}
             leftBackground={leftBg}
+            rightPadding={false}
+            rightBg="bg-[#FAFAFA]"
         />
     );
 }

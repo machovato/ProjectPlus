@@ -13,6 +13,10 @@ interface LayoutSplitProps {
     rightContent: React.ReactNode;
     /** Override left panel background. Defaults to DTN Blue gradient. */
     leftBackground?: "blue" | "navy";
+    /** Override padding for the right panel. Defaults to true (px-12 py-10). */
+    rightPadding?: boolean;
+    /** Override background for the right panel. Defaults to white. */
+    rightBg?: string;
 }
 
 const BACKGROUNDS = {
@@ -24,6 +28,8 @@ export function LayoutSplit({
     leftContent,
     rightContent,
     leftBackground = "blue",
+    rightPadding = true,
+    rightBg = "bg-white",
 }: LayoutSplitProps) {
     return (
         <div className="relative w-full h-full flex overflow-hidden">
@@ -81,7 +87,7 @@ export function LayoutSplit({
 
             {/* RIGHT PANEL — 60% */}
             <div
-                className="relative z-10 flex flex-col justify-center px-12 py-10 bg-white overflow-auto"
+                className={`relative z-10 flex flex-col justify-center h-full overflow-auto ${rightBg} ${rightPadding ? 'px-12 py-10' : ''}`}
                 style={{ width: "60%", flexShrink: 0 }}
             >
                 {rightContent}
