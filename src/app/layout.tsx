@@ -4,6 +4,10 @@ import "@/styles/globals.css";
 export const metadata: Metadata = {
     title: "DTN Project Pulse",
     description: "Meeting presentation engine powered by DTN",
+    robots: {
+        index: false,
+        follow: false,
+    },
 };
 
 export default function RootLayout({
