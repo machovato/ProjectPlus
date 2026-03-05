@@ -84,6 +84,22 @@ export function KpisSlide({ slide }: { slide: LooseSlide }) {
                                 <TrendIcon trend={kpi.trend} />
                             </div>
 
+                            {/* Fraction Progress Bar */}
+                            {(() => {
+                                const match = kpi.value.match(/^(\d+(?:\.\d+)?)\s*(?:of|\/)\s*(\d+(?:\.\d+)?)$/i);
+                                if (match) {
+                                    const num = parseFloat(match[1]);
+                                    const den = parseFloat(match[2]);
+                                    const pct = den > 0 ? Math.min(100, Math.max(0, (num / den) * 100)) : 0;
+                                    return (
+                                        <div className="w-full h-1.5 mt-0.5 mb-1 bg-black/10 rounded-full overflow-hidden shadow-inner">
+                                            <div className="h-full bg-[#1B8FE0] rounded-full transition-all duration-500 ease-out" style={{ width: `${pct}%` }} />
+                                        </div>
+                                    );
+                                }
+                                return null;
+                            })()}
+
                             {/* Label */}
                             <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#6D6E71]">
                                 {kpi.label}

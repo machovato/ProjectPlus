@@ -1,12 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CheckCircle2, Circle, ChevronRight, AlertTriangle } from "lucide-react";
+import * as LucideIcons from "lucide-react";
+import { ChevronRight, AlertTriangle, Circle } from "lucide-react";
 import { LayoutWhite } from "./layouts/LayoutWhite";
 import type { LooseSlide } from "@/lib/schema";
 
 interface Step {
     label: string;
+    icon?: string;
     status?: "done" | "current" | "next";
     badges?: string[];
     blockers?: string[];
@@ -16,33 +18,43 @@ interface PipelineData {
     steps: Step[];
 }
 
+function resolveIconFromLabel(label: string): React.ElementType {
+    const lower = label.toLowerCase();
+    if (lower.match(/triage|review|validate/)) return LucideIcons.ClipboardCheck;
+    if (lower.match(/schema|metadata|architect/)) return LucideIcons.Layers;
+    if (lower.match(/language|scope|international/)) return LucideIcons.Globe;
+    if (lower.match(/convert|migrate|move/)) return LucideIcons.ArrowRightLeft;
+    if (lower.match(/governance|policy|workflow/)) return LucideIcons.GitBranch;
+    if (lower.match(/qa|test|quality/)) return LucideIcons.BadgeCheck;
+    if (lower.match(/deliver|launch|release/)) return LucideIcons.Rocket;
+    if (lower.match(/design|blueprint|template/)) return LucideIcons.PenTool;
+    return Circle;
+}
+
 const STATUS_CONFIG = {
     done: {
-        icon: CheckCircle2,
-        // Done = DTN Primary Green — positive, complete
         dotClass: "border-[#4CB944]",
         dotBg: "#4CB944",
-        labelClass: "text-[#005741] font-semibold", // Dark Green text for readability
+        iconColor: "text-white",
+        labelClass: "text-[#005741] font-semibold",
         statusText: "Done",
         statusColor: "text-[#005741]",
     },
     current: {
-        icon: Circle,
-        // In Progress = DTN Primary Blue — brand active state
         dotClass: "border-[#1B8FE0]",
         dotBg: "#1B8FE0",
-        labelClass: "text-[#003057] font-bold",
+        iconColor: "text-white",
+        labelClass: "text-[#0D2240] font-bold",
         statusText: "In Progress",
         statusColor: "text-[#1B8FE0]",
     },
     next: {
-        icon: Circle,
-        // Upcoming = DTN Neutral Mid — inactive, not yet
-        dotClass: "border-[#BCBEC0]",
-        dotBg: "transparent",
-        labelClass: "text-[#6D6E71] font-medium",
+        dotClass: "border-[#BDBDBD]",
+        dotBg: "white",
+        iconColor: "text-[#BDBDBD]",
+        labelClass: "text-[#757575] font-medium",
         statusText: "Up Next",
-        statusColor: "text-[#BCBEC0]",
+        statusColor: "text-[#757575]",
     },
 } as const;
 
@@ -52,7 +64,6 @@ export function PipelineSlide({ slide }: { slide: LooseSlide }) {
 
     return (
         <LayoutWhite center={false}>
-            {/* Eyebrow title */}
             <motion.p
                 className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#1B8FE0] pt-10 pb-0 text-center w-full"
                 initial={{ opacity: 0 }}
@@ -63,7 +74,7 @@ export function PipelineSlide({ slide }: { slide: LooseSlide }) {
             </motion.p>
 
             <motion.h2
-                className="font-bold text-[#003057] text-center mb-0 mt-2"
+                className="font-bold text-[#0D2240] text-center mb-0 mt-2"
                 style={{ fontSize: "clamp(28px, 3vw, 44px)" }}
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -72,71 +83,71 @@ export function PipelineSlide({ slide }: { slide: LooseSlide }) {
                 {slide.title}
             </motion.h2>
 
-            {/* Pipeline flow — full width, heavy scaling */}
             <div className="flex-1 flex items-center justify-center w-full px-12">
                 <div className="flex items-start justify-center gap-0 w-full" style={{ maxWidth: "88%" }}>
                     {steps.map((step, i) => {
                         const status = step.status ?? "next";
                         const cfg = STATUS_CONFIG[status] ?? STATUS_CONFIG.next;
-                        const Icon = cfg.icon;
+                        let IconComponent = resolveIconFromLabel(step.label);
+                        if (step.icon) {
+                            const iconKey = step.icon.split('-').map(part => part.charAt(0).toUpperCase() + part.slice(1)).join('');
+                            // @ts-expect-error - Dynamic lookup
+                            if (LucideIcons[iconKey]) IconComponent = LucideIcons[iconKey];
+                        }
                         const isLast = i === steps.length - 1;
 
                         return (
                             <div key={i} className="flex items-start flex-1 min-w-0">
-                                {/* Node + content */}
                                 <motion.div
                                     className="flex flex-col items-center gap-4 flex-1 px-4"
                                     initial={{ opacity: 0, y: 16 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.45, delay: 0.15 + i * 0.1 }}
                                 >
-                                    {/* Status icon — scaled massively */}
                                     <div
-                                        className={`rounded-full flex items-center justify-center shadow-md ${cfg.dotClass}`}
+                                        className={`rounded-full flex items-center justify-center shadow-md relative ${status === "current" ? "pulse-ring-active" : ""} ${cfg.dotClass}`}
                                         style={{
                                             background: cfg.dotBg,
+                                            color: cfg.dotBg,
                                             width: "clamp(64px, 7vw, 110px)",
                                             height: "clamp(64px, 7vw, 110px)",
                                             borderWidth: "clamp(4px, 0.4vw, 8px)"
                                         }}
                                     >
-                                        {status === "done" ? (
-                                            <CheckCircle2 className="text-white" style={{ width: "50%", height: "50%" }} fill="currentColor" />
-                                        ) : status === "current" ? (
-                                            <div className="rounded-full bg-white" style={{ width: "35%", height: "35%" }} />
-                                        ) : (
-                                            <span
-                                                className="font-bold text-[#BCBEC0]"
-                                                style={{ fontSize: "clamp(20px, 2.5vw, 36px)" }}
-                                            >
-                                                {i + 1}
-                                            </span>
-                                        )}
+                                        <IconComponent className={`w-1/2 h-1/2 ${cfg.iconColor}`} strokeWidth={status === "current" ? 2.5 : 2} />
                                     </div>
 
-                                    {/* Label */}
                                     <span
-                                        className={`text-center leading-tight ${cfg.labelClass}`}
-                                        style={{ fontSize: "clamp(16px, 1.8vw, 28px)" }}
+                                        className={`text-center leading-tight mt-2 ${cfg.labelClass}`}
+                                        style={{ fontSize: "clamp(16px, 1.8vw, 24px)" }}
                                     >
                                         {step.label}
                                     </span>
 
-                                    {/* Status text */}
                                     <span
-                                        className={`font-bold uppercase tracking-wider ${cfg.statusColor}`}
-                                        style={{ fontSize: "clamp(12px, 1.1vw, 18px)" }}
+                                        className={`font-semibold uppercase tracking-wider ${cfg.statusColor}`}
+                                        style={{ fontSize: "clamp(10px, 1vw, 14px)", marginTop: "-4px" }}
                                     >
                                         {cfg.statusText}
                                     </span>
 
-                                    {/* Badges */}
+                                    {status === "current" && (
+                                        <div className="w-full max-w-[85%] h-1 mt-1 bg-[#E0E7EF] rounded-full overflow-hidden">
+                                            <motion.div
+                                                className="h-full bg-[#1B8FE0] rounded-full"
+                                                initial={{ width: 0 }}
+                                                animate={{ width: "65%" }}
+                                                transition={{ duration: 1, delay: 0.8, ease: "easeOut" }}
+                                            />
+                                        </div>
+                                    )}
+
                                     {step.badges && step.badges.length > 0 && (
                                         <div className="flex flex-wrap gap-2 justify-center mt-2">
                                             {step.badges.map((b, bi) => (
                                                 <span
                                                     key={bi}
-                                                    className="bg-blue-50 text-[#1B8FE0] border border-blue-100 font-semibold"
+                                                    className="bg-[#F5F7FA] text-[#1B8FE0] border border-[#E0E7EF] font-semibold"
                                                     style={{
                                                         fontSize: "clamp(12px, 1.1vw, 16px)",
                                                         padding: "clamp(4px, 0.4vw, 8px) clamp(8px, 0.8vw, 16px)",
@@ -149,7 +160,6 @@ export function PipelineSlide({ slide }: { slide: LooseSlide }) {
                                         </div>
                                     )}
 
-                                    {/* Blockers */}
                                     {step.blockers && step.blockers.length > 0 && (
                                         <div className="flex flex-col gap-2 w-full mt-3">
                                             {step.blockers.map((bl, bli) => (
@@ -176,23 +186,22 @@ export function PipelineSlide({ slide }: { slide: LooseSlide }) {
                                     )}
                                 </motion.div>
 
-                                {/* Connector arrow — scaled explicitly */}
                                 {!isLast && (
                                     <div
                                         className="flex items-center shrink-0"
                                         style={{
-                                            paddingTop: "clamp(32px, 3.5vw, 55px)", // Matches half the dot height
+                                            paddingTop: "clamp(32px, 3.5vw, 55px)",
                                         }}
                                     >
                                         <div
-                                            className="bg-gray-200"
+                                            className="bg-[#E0E7EF]"
                                             style={{
                                                 width: "clamp(24px, 4vw, 70px)",
                                                 height: "clamp(2px, 0.2vw, 4px)"
                                             }}
                                         />
                                         <ChevronRight
-                                            className="text-gray-300 -ml-1.5"
+                                            className="text-[#BDBDBD] -ml-1.5"
                                             style={{
                                                 width: "clamp(20px, 2vw, 36px)",
                                                 height: "clamp(20px, 2vw, 36px)"

@@ -138,6 +138,21 @@ export function HeroSlide({ slide }: { slide: LooseSlide }) {
                                     </span>
                                     <TrendIcon trend={kpi.trend} />
                                 </div>
+                                {/* Fraction Progress Bar */}
+                                {(() => {
+                                    const match = kpi.value.match(/^(\d+(?:\.\d+)?)\s*(?:of|\/)\s*(\d+(?:\.\d+)?)$/i);
+                                    if (match) {
+                                        const num = parseFloat(match[1]);
+                                        const den = parseFloat(match[2]);
+                                        const pct = den > 0 ? Math.min(100, Math.max(0, (num / den) * 100)) : 0;
+                                        return (
+                                            <div className="w-full h-1 mt-1 bg-white/20 rounded-full overflow-hidden">
+                                                <div className="h-full bg-white rounded-full transition-all duration-500 ease-out" style={{ width: `${pct}%` }} />
+                                            </div>
+                                        );
+                                    }
+                                    return null;
+                                })()}
                             </motion.div>
                         ))}
                     </div>

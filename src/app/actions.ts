@@ -38,10 +38,65 @@ export async function publishDeck(raw: unknown): Promise<PublishResult> {
             },
         });
 
-        revalidatePath("/history");
+        revalidatePath("/");
         return { success: true, id: record.id };
     } catch (err) {
         console.error("Publish error:", err);
         return { success: false, error: "Database error. Check your connection." };
+    }
+}
+
+export async function deleteDeck(id: string): Promise<{ success: boolean; error?: string }> {
+    try {
+        await prisma.update.delete({ where: { id } });
+        revalidatePath("/");
+        return { success: true };
+    } catch (err) {
+        console.error("Delete error:", err);
+        return { success: false, error: "Failed to delete deck." };
+    }
+}
+
+export async function renameDeck(id: string, newTitle: string): Promise<{ success: boolean; error?: string }> {
+    try {
+        const record = await prisma.update.findUnique({ where: { id } });
+        if (!record) return { success: false, error: "Deck not found." };
+
+        let contentJson = record.content_json;
+        try {
+            const raw = JSON.parse(contentJson);
+            if (raw.meta) raw.meta.title = newTitle;
+            if (raw.slides && raw.slides.length > 0 && raw.slides[0].type === "hero") {
+                raw.slides[0].title = newTitle;
+            }
+            contentJson = JSON.stringify(raw, null, 2);
+        } catch (e) {
+            // Best effort JSON patching
+        }
+
+        await prisma.update.update({
+            where: { id },
+            data: { title: newTitle, content_json: contentJson },
+        });
+
+        revalidatePath("/");
+        return { success: true };
+    } catch (err) {
+        console.error("Rename error:", err);
+        return { success: false, error: "Failed to rename deck." };
+    }
+}
+
+export async function togglePinDeck(id: string, pinned: boolean): Promise<{ success: boolean; error?: string }> {
+    try {
+        await prisma.update.update({
+            where: { id },
+            data: { pinned },
+        });
+        revalidatePath("/");
+        return { success: true };
+    } catch (err) {
+        console.error("Pin error:", err);
+        return { success: false, error: "Failed to pin deck." };
     }
 }

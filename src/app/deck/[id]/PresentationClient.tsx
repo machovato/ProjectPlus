@@ -269,7 +269,11 @@ export function PresentationClient({ deck, deckId }: PresentationClientProps) {
                     break;
                 case "e":
                 case "E":
-                    router.push("/");
+                    if (e.shiftKey) {
+                        router.push(`/editor?editId=${deckId}`);
+                    } else {
+                        router.push("/");
+                    }
                     break;
                 case "g":
                 case "G":

@@ -9,6 +9,7 @@ import {
     ArrowRight,
     Keyboard,
 } from "lucide-react";
+import { DeckList } from "./DeckList";
 
 export const dynamic = 'force-dynamic';
 
@@ -48,6 +49,7 @@ const SHORTCUTS = [
     { key: "D", action: "Toggle Executive / Full density" },
     { key: "P", action: "Print / export to PDF" },
     { key: "E", action: "Return to home" },
+    { key: "Shift + E", action: "Edit current deck" },
     { key: "Esc", action: "Dismiss overlay" },
 ];
 
@@ -85,6 +87,7 @@ export default async function HomePage() {
             date: true,
             template: true,
             rag: true,
+            pinned: true,
             created_at: true,
         },
     });
@@ -135,45 +138,7 @@ export default async function HomePage() {
                 {decks.length === 0 ? (
                     <EmptyState editorHref={editorHref} />
                 ) : (
-                    <div className="flex flex-col gap-2.5">
-                        {decks.map((deck) => (
-                            <Link
-                                key={deck.id}
-                                href={`/deck/${deck.id}`}
-                                className="card p-4 flex items-center gap-4 hover:shadow-md transition-all hover:-translate-y-0.5 group"
-                            >
-                                <div className="p-2.5 bg-blue-50 rounded-lg shrink-0">
-                                    <FileText className="w-5 h-5 text-[var(--dtn-blue)]" />
-                                </div>
-
-                                <div className="flex-1 min-w-0">
-                                    <p className="text-sm font-semibold text-[var(--color-text-heading)] truncate group-hover:text-[var(--dtn-blue)] transition-colors">
-                                        {deck.title}
-                                    </p>
-                                    <div className="flex items-center gap-3 mt-0.5 flex-wrap">
-                                        <span className="inline-flex items-center gap-1 text-xs text-[var(--color-text-muted)]">
-                                            <Calendar className="w-3 h-3" />
-                                            {formatDate(deck.date)}
-                                        </span>
-                                        <span className="text-xs text-[var(--color-text-muted)] bg-gray-50 border border-[var(--color-border)] rounded px-2 py-0.5 font-medium">
-                                            {TEMPLATE_LABELS[deck.template] ?? deck.template}
-                                        </span>
-                                    </div>
-                                </div>
-
-                                {deck.rag && (
-                                    <span className={`rag-pill ${RAG_CLASSES[deck.rag] ?? ""} shrink-0`}>
-                                        <span className={`w-2 h-2 rounded-full ${RAG_DOTS[deck.rag] ?? ""}`} />
-                                        {RAG_LABELS[deck.rag] ?? deck.rag}
-                                    </span>
-                                )}
-
-                                <span className="text-xs text-[var(--color-text-muted)] shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    Open →
-                                </span>
-                            </Link>
-                        ))}
-                    </div>
+                    <DeckList decks={decks} />
                 )}
             </section>
 

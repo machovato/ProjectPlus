@@ -22,5 +22,6 @@ model Update {
   content_json   String
   source_raw     String
   schema_version Int      @default(1)
+  pinned         Boolean  @default(false)
   created_at     DateTime @default(now())
 }

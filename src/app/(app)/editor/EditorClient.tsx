@@ -85,11 +85,12 @@ interface ZodError {
     message: string;
 }
 
-export function EditorClient() {
+export function EditorClient({ existingJson }: { existingJson?: string }) {
     const router = useRouter();
     const searchParams = useSearchParams();
     const prefill = searchParams.get("prefill");
     const initialJson = (() => {
+        if (existingJson) return existingJson;
         if (prefill) { try { JSON.parse(prefill); return prefill; } catch { /* fall through */ } }
         return DEFAULT_JSON;
     })();

@@ -39,6 +39,7 @@ const PipelineDataSchema = z.object({
     steps: z.array(
         z.object({
             label: z.string(),
+            icon: z.string().optional(),
             status: z.enum(["done", "current", "next"]).optional(),
             badges: z.array(z.string()).optional(),
             blockers: z.array(z.string()).optional(),
