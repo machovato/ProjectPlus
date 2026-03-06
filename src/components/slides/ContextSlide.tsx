@@ -32,14 +32,14 @@ export function ContextSlide({ slide }: { slide: LooseSlide }) {
 
     return (
         <LayoutWhite center={false}>
-            <div className="w-full flex-1 flex flex-col justify-center py-12">
+            <div className="w-full flex-1 flex flex-col justify-center py-12 px-slide">
                 <div className="mb-12 shrink-0">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-text-muted mb-2">
+                    <p className="text-slide-subtitle font-semibold uppercase tracking-[0.18em] text-text-muted mb-2">
                         Context
                     </p>
                     <h2
-                        className="font-bold text-text-primary leading-tight"
-                        style={{ fontSize: "clamp(32px, 4vw, 56px)" }}
+                        className="font-bold text-text-primary leading-tight text-slide-title"
+                        style={{ fontWeight: "var(--font-weight-title)" }}
                     >
                         {slide.title}
                     </h2>
@@ -56,25 +56,29 @@ export function ContextSlide({ slide }: { slide: LooseSlide }) {
 
                             if (item.status === "confirmed") {
                                 StatusIcon = <CheckCircle2 className="w-8 h-8 text-accent-success fill-surface-page drop-shadow-sm" />;
-                                statusColor = "border-l-accent-success bg-surface-primary shadow-md";
+                                statusColor = "border-accent-success bg-surface-primary shadow-md";
                                 titleColor = "text-text-on-emphasis";
                                 bodyColor = "text-text-on-emphasis/90";
                                 iconBg = "bg-white/10 text-text-on-emphasis border-white/20";
                             } else if (item.status === "in-progress") {
                                 StatusIcon = <div className="w-8 h-8 rounded-full bg-accent-info flex items-center justify-center shadow-inner"><Loader2 className="w-5 h-5 text-white animate-spin-slow" /></div>;
-                                statusColor = "border-l-accent-info bg-surface-primary shadow-md";
+                                statusColor = "border-accent-info bg-surface-primary shadow-md";
                                 titleColor = "text-text-on-emphasis";
                                 bodyColor = "text-text-on-emphasis/90";
                                 iconBg = "bg-white/10 text-text-on-emphasis border-white/20";
                             } else if (item.status === "pending") {
                                 StatusIcon = <Clock className="w-8 h-8 text-border-muted" />;
-                                statusColor = "border-l-border-muted bg-surface-secondary opacity-80";
+                                statusColor = "border-border-muted bg-surface-secondary opacity-80";
                             }
 
                             return (
                                 <motion.div
                                     key={i}
-                                    className={`flex items-start gap-6 p-6 md:p-8 border border-border-default border-l-[8px] rounded-2xl transition-all ${statusColor}`}
+                                    className={`flex items-start gap-6 p-card border-card rounded-card transition-all ${statusColor}`}
+                                    style={{
+                                        borderWidth: "var(--border-width-card)",
+                                        borderLeftWidth: "var(--border-width-accent)"
+                                    }}
                                     initial={{ opacity: 0, x: -20 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     transition={{ duration: 0.4, delay: 0.1 + i * 0.1 }}
@@ -88,12 +92,12 @@ export function ContextSlide({ slide }: { slide: LooseSlide }) {
                                                 <span className={`shrink-0 flex p-2 border rounded-xl shadow-sm ${iconBg}`}>
                                                     {getLucideIcon(item.icon)}
                                                 </span>
-                                                <h3 className={`text-2xl md:text-3xl font-extrabold leading-tight ${titleColor}`}>
+                                                <h3 className={`text-card-title font-bold leading-tight ${titleColor}`} style={{ fontWeight: "var(--font-weight-card-title)" }}>
                                                     {item.title}
                                                 </h3>
                                             </div>
                                         </div>
-                                        <p className={`text-xl md:text-2xl font-medium leading-relaxed max-w-4xl sm:ml-[3.5rem] mt-3 ${bodyColor}`}>
+                                        <p className={`text-card-body font-medium leading-relaxed max-w-4xl sm:ml-[3.5rem] mt-3 ${bodyColor}`}>
                                             {item.body}
                                         </p>
                                     </div>

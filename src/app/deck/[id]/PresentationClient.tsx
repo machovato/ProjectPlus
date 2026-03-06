@@ -5,8 +5,10 @@ import { X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { SlideRenderer } from "@/components/SlideRenderer";
+import { SlideFormEditor } from "@/components/editor/SlideFormEditor";
 import type { LooseDeck, LooseSlide } from "@/lib/schema";
 import { processSlides, type DensityMode } from "@/lib/paginate";
+import { TemplateProvider } from "@/components/TemplateContext";
 
 // ─── Slide Grid Overlay ───────────────────────────────────────────────────────
 
@@ -130,9 +132,11 @@ function SlideGridOverlay({
 function SpeakerNotesOverlay({
     notes,
     onClose,
+    onEditSlide,
 }: {
     notes?: string;
     onClose: () => void;
+    onEditSlide: () => void;
 }) {
     return (
         <motion.div
@@ -163,6 +167,15 @@ function SpeakerNotesOverlay({
                             <span className="text-white/40 italic">No speaker notes for this slide.</span>
                         )}
                     </p>
+                </div>
+
+                <div className="mt-6 pt-6 border-t border-white/10 shrink-0 flex justify-end">
+                    <button
+                        onClick={onEditSlide}
+                        className="inline-flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg bg-white/10 hover:bg-white/15 text-white transition-colors border border-white/5"
+                    >
+                        <span className="opacity-70">✏️</span> Edit This Slide
+                    </button>
                 </div>
             </div>
         </motion.div>
@@ -224,9 +237,18 @@ export function PresentationClient({ deck, deckId }: PresentationClientProps) {
     const [direction, setDirection] = useState(1);
     const [showNotes, setShowNotes] = useState(false);
     const [showGrid, setShowGrid] = useState(false);
+    const [showFormEditor, setShowFormEditor] = useState(false);
 
     const slides = processSlides(deck.slides, density);
     const total = slides.length;
+
+    // Map the rendered slide index back to the index in deck.slides
+    const indexMap: number[] = [];
+    deck.slides.forEach((slide, idx) => {
+        const paginated = processSlides([slide], density);
+        paginated.forEach(() => indexMap.push(idx));
+    });
+    const originalIndex = indexMap[Math.min(currentIndex, total - 1)] ?? 0;
 
     const navigate = useCallback(
         (delta: number) => {
@@ -250,12 +272,13 @@ export function PresentationClient({ deck, deckId }: PresentationClientProps) {
         const onKey = (e: KeyboardEvent) => {
             // Dismiss overlays first
             if (e.key === "Escape") {
+                if (showFormEditor) { setShowFormEditor(false); return; }
                 if (showGrid) { setShowGrid(false); return; }
                 if (showNotes) { setShowNotes(false); return; }
                 return;
             }
             // Don't navigate when overlays are open
-            if (showGrid || showNotes) return;
+            if (showGrid || showNotes || showFormEditor) return;
 
             switch (e.key) {
                 case "ArrowRight":
@@ -268,7 +291,11 @@ export function PresentationClient({ deck, deckId }: PresentationClientProps) {
                     break;
                 case "n":
                 case "N":
-                    setShowNotes((v) => !v);
+                    if (e.shiftKey) {
+                        setShowFormEditor((v) => !v);
+                    } else {
+                        setShowNotes((v) => !v);
+                    }
                     break;
                 case "e":
                 case "E":
@@ -294,7 +321,7 @@ export function PresentationClient({ deck, deckId }: PresentationClientProps) {
         };
         window.addEventListener("keydown", onKey);
         return () => window.removeEventListener("keydown", onKey);
-    }, [navigate, router, deckId, showNotes, showGrid]);
+    }, [navigate, router, deckId, showNotes, showGrid, showFormEditor]);
 
     const currentSlide = slides[Math.min(currentIndex, total - 1)];
     const isHero = currentSlide ? HERO_LAYOUTS.has(currentSlide.type) : false;
@@ -308,9 +335,9 @@ export function PresentationClient({ deck, deckId }: PresentationClientProps) {
     }
 
     return (
-        <>
+        <TemplateProvider template={deck.meta.template || "status"}>
             {/* Full-viewport slide stage */}
-            <div className="fixed inset-0 overflow-hidden bg-white" data-template={deck.meta.template || "status"}>
+            <div className="fixed inset-0 overflow-hidden bg-white">
                 <AnimatePresence initial={false} custom={direction} mode="popLayout">
                     <motion.div
                         key={currentIndex}
@@ -361,6 +388,26 @@ export function PresentationClient({ deck, deckId }: PresentationClientProps) {
                         key="notes"
                         notes={currentSlide.notes}
                         onClose={() => setShowNotes(false)}
+                        onEditSlide={() => {
+                            setShowNotes(false);
+                            setShowFormEditor(true);
+                        }}
+                    />
+                )}
+            </AnimatePresence>
+
+            <AnimatePresence>
+                {showFormEditor && (
+                    <SlideFormEditor
+                        key="editor"
+                        deck={deck}
+                        deckId={deckId}
+                        slideIndex={originalIndex}
+                        onClose={() => setShowFormEditor(false)}
+                        onSaveSuccess={() => {
+                            setShowFormEditor(false);
+                            router.refresh();
+                        }}
                     />
                 )}
             </AnimatePresence>
@@ -380,6 +427,6 @@ export function PresentationClient({ deck, deckId }: PresentationClientProps) {
                 )}
             </AnimatePresence>
 
-        </>
+        </TemplateProvider>
     );
 }

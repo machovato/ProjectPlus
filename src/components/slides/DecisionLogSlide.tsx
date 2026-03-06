@@ -72,7 +72,7 @@ export function DecisionLogSlide({ slide }: { slide: LooseSlide }) {
                         className="grid grid-cols-[1fr_auto_auto_auto] gap-3 py-2.5 border-b border-border-default/50 last:border-0 items-start"
                         initial={{ opacity: 0, y: 6 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.3, delay: 0.1 + i * 0.05 }}
+                        transition={{ duration: 0.15, delay: 0.1 + i * 0.05 }}
                     >
                         <p
                             className="text-text-primary font-semibold leading-snug"

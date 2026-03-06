@@ -38,7 +38,8 @@ function getIcon(name?: string) {
 export function KpisSlide({ slide }: { slide: LooseSlide }) {
     const data = (slide.data ?? { items: [] }) as unknown as KpisData;
     const items = data.items ?? [];
-    const cols = items.length <= 2 ? 2 : items.length === 3 ? 3 : 4;
+    const cols = items.length <= 2 ? 1 : items.length === 3 ? 3 : items.length === 4 ? 2 : 3;
+    const gridCols = items.length === 3 ? 3 : 2;
 
     return (
         <LayoutWhite center={false}>
@@ -47,37 +48,43 @@ export function KpisSlide({ slide }: { slide: LooseSlide }) {
                 className="text-[11px] font-semibold uppercase tracking-[0.18em] text-accent-info mb-8 pt-10 text-center w-full"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.4 }}
+                transition={{ duration: 0.15 }}
             >
                 {slide.title}
             </motion.p>
 
-            {/* KPI scoreboard — centered, generous space */}
-            <div className="flex-1 flex items-center justify-center w-full">
+            {/* KPI scoreboard — dashboard widget panel grid */}
+            <div className="flex-1 flex items-center justify-center w-full px-slide pb-slide">
                 <div
-                    className="grid gap-8 w-full max-w-5xl"
-                    style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}
+                    className="grid gap-card w-full max-w-5xl"
+                    style={{ gridTemplateColumns: `repeat(${gridCols}, 1fr)` }}
                 >
                     {items.map((kpi, i) => (
                         <motion.div
                             key={i}
-                            className="flex flex-col items-center text-center gap-3"
+                            className="flex flex-col items-center text-center gap-3 bg-surface-secondary border border-border-default rounded-card shadow-sm"
+                            style={{ padding: "var(--spacing-card-padding)" }}
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.45, delay: 0.1 + i * 0.08 }}
+                            transition={{ duration: 0.15, delay: 0.1 + i * 0.05 }}
                         >
-                            {/* Icon */}
-                            {kpi.icon && (
-                                <div className="w-12 h-12 rounded-2xl bg-surface-muted border border-border-default/50 flex items-center justify-center mb-1">
-                                    {getIcon(kpi.icon)}
-                                </div>
-                            )}
+                            {/* Icon & Label */}
+                            <div className="flex items-center gap-3 mb-1">
+                                {kpi.icon && (
+                                    <div className="w-8 h-8 rounded-lg bg-surface-muted flex items-center justify-center">
+                                        {getIcon(kpi.icon)}
+                                    </div>
+                                )}
+                                <span className="text-metric-unit font-semibold uppercase tracking-widest text-text-secondary">
+                                    {kpi.label}
+                                </span>
+                            </div>
 
                             {/* Value — scoreboard */}
                             <div className="flex items-baseline gap-2">
                                 <span
-                                    className="font-extrabold text-text-primary whitespace-nowrap drop-shadow-sm tracking-tight"
-                                    style={{ fontSize: "clamp(42px, 5vw, 72px)", lineHeight: 1 }}
+                                    className="font-bold text-text-primary whitespace-nowrap text-metric-lg"
+                                    style={{ lineHeight: 1 }}
                                 >
                                     {kpi.value}
                                 </span>
@@ -100,14 +107,9 @@ export function KpisSlide({ slide }: { slide: LooseSlide }) {
                                 return null;
                             })()}
 
-                            {/* Label */}
-                            <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-text-secondary">
-                                {kpi.label}
-                            </span>
-
                             {/* Note */}
                             {kpi.note && (
-                                <span className="text-xs text-text-muted">{kpi.note}</span>
+                                <span className="text-caption text-text-muted mt-1">{kpi.note}</span>
                             )}
                         </motion.div>
                     ))}

@@ -61,7 +61,7 @@ export function LayoutSplit({
                     baseRadius={50}
                     step={55}
                     color="white"
-                    opacity={0.7}
+                    opacity={0.15}
                     className="w-full h-full"
                 />
             </div>
@@ -80,14 +80,14 @@ export function LayoutSplit({
                     baseRadius={40}
                     step={45}
                     color="#1B8FE0"
-                    opacity={0.4}
+                    opacity={0.08}
                     className="w-full h-full"
                 />
             </div>
 
             {/* RIGHT PANEL — 60% */}
             <div
-                className={`relative z-10 flex flex-col justify-center h-full overflow-auto ${rightBg} ${rightPadding ? 'px-12 py-10' : ''}`}
+                className={`relative z-10 flex flex-col justify-center h-full overflow-auto ${rightBg} ${rightPadding ? 'px-slide py-10' : ''}`}
                 style={{ width: "60%", flexShrink: 0 }}
             >
                 {rightContent}

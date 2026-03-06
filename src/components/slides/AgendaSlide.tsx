@@ -55,7 +55,7 @@ export function AgendaSlide({ slide }: { slide: LooseSlide }) {
                     }}
                     initial={{ opacity: 0, x: 14 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.4, delay: 0.1 + i * 0.08 }}
+                    transition={{ duration: 0.15, delay: 0.1 + i * 0.05 }}
                 >
                     {/* Number badge — sized for presentation readability */}
                     <div

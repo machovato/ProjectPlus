@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -126,9 +126,10 @@
   --type-display: clamp(40px, 5vw, 68px);
   --type-headline: clamp(28px, 3.5vw, 48px);
   --type-subheadline: clamp(20px, 2vw, 28px);
-  --type-body: clamp(14px, 1.3vw, 16px);
-  --type-kpi-value: clamp(36px, 4vw, 60px);
+  --type-metric-unit: clamp(14px, 1.3vw, 18px);
   --type-eyebrow: 11px;
+
+  --font-family: 'Plus Jakarta Sans', Arial, sans-serif;
 }
 
 /* ─── Base resets ───────────────────────────────────────────────────────── */
@@ -143,7 +144,7 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: var(--font-family);
   font-size: 14px;
   color: var(--color-text-body);
   background: var(--color-surface);
@@ -281,42 +282,81 @@ body {
 [data-template="status"],
 [data-template="default"],
 :root {
-  --surface-hero: linear-gradient(135deg, #4A90D9 0%, #6BA3E0 50%, #8BB8E8 100%);
-  --surface-primary: var(--dtn-blue);
+  /* Surfaces */
+  --surface-hero: linear-gradient(135deg, #1497E3 0%, #4AAFE8 50%, #7DC5EF 100%);
+  --surface-primary: #1497E3;
   --surface-secondary: #FFFFFF;
-  --surface-muted: var(--dtn-neutral-bg);
+  --surface-muted: #F5F7FA;
   --surface-page: #FFFFFF;
-  --surface-split: var(--dtn-gradient-blue);
-  --surface-split-alt: var(--dtn-gradient-navy);
+  --surface-split: var(--surface-hero);
+  --surface-split-alt: var(--surface-hero);
 
+  /* Text */
   --text-on-hero: #FFFFFF;
-  --text-primary: var(--dtn-navy);
-  --text-secondary: var(--dtn-neutral-dark);
-  --text-muted: var(--dtn-neutral-mid);
+  --text-primary: #003E6A;
+  --text-secondary: #888B8D;
+  --text-muted: #B0B2B4;
   --text-on-emphasis: #FFFFFF;
 
-  --accent-success: var(--dtn-green);
-  --accent-warning: var(--dtn-orange);
-  --accent-danger: var(--dtn-red);
-  --accent-info: var(--dtn-blue);
-  --accent-progress: var(--dtn-blue);
+  /* Accents */
+  --accent-success: #68C949;
+  --accent-warning: #FF9E1B;
+  --accent-danger: #CD001A;
+  --accent-info: #1497E3;
+  --accent-progress: #1497E3;
 
-  --border-default: var(--dtn-neutral-light);
-  --border-strong: var(--dtn-blue);
-  --border-muted: var(--dtn-neutral-mid);
+  /* Borders */
+  --border-default: #E0E1E3;
+  --border-strong: #1497E3;
+  --border-muted: #B0B2B4;
+  --border-width-card: 1px;
+  --border-width-accent: 3px;
+  --border-width-timeline: 3px;
+  --border-width-divider: 1px;
+  --border-radius-card: clamp(6px, 0.8vw, 10px);
+  --border-radius-badge: 4px;
 
-  --badge-critical-bg: var(--dtn-red);
+  /* Typography */
+  --font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+  --type-slide-title: clamp(28px, 3.5vw, 44px);
+  --type-slide-subtitle: clamp(14px, 1.6vw, 18px);
+  --type-headline: clamp(20px, 2.5vw, 32px);
+  /* Fallback for balanced scales */
+  --type-card-title: clamp(14px, 1.4vw, 18px);
+  --type-card-body: clamp(12px, 1.2vw, 15px);
+  --type-metric-large: clamp(28px, 3.5vw, 48px);
+  --type-metric-medium: clamp(18px, 2vw, 24px);
+  --type-metric-unit: clamp(12px, 1.2vw, 16px);
+  --type-badge: clamp(9px, 0.9vw, 11px);
+  --type-caption: clamp(10px, 1vw, 12px);
+  --font-weight-title: 700;
+  --font-weight-card-title: 500;
+
+  /* Spacing */
+  --spacing-card-padding: clamp(12px, 1.5vw, 20px);
+  --spacing-card-gap: clamp(8px, 1vw, 14px);
+  --spacing-section-gap: clamp(16px, 2vw, 28px);
+  --spacing-slide-padding: clamp(20px, 3vw, 40px);
+
+  /* Component behavior */
+  --timeline-marker-size: 1.25rem;
+  --timeline-card-style: none;
+  --kpi-card-style: minimal;
+  --hero-content-position: bottom;
+
+  /* Badges — Semantic */
+  --badge-critical-bg: #CD001A;
   --badge-critical-text: #FFFFFF;
-  --badge-high-bg: var(--dtn-orange);
-  --badge-high-text: var(--dtn-navy);
-  --badge-moderate-bg: var(--dtn-neutral-mid);
-  --badge-moderate-text: var(--dtn-navy);
+  --badge-high-bg: #FF9E1B;
+  --badge-high-text: #003E6A;
+  --badge-moderate-bg: #B0B2B4;
+  --badge-moderate-text: #003E6A;
   --badge-action-bg: #FDEAEC;
-  --badge-action-text: #8B0F1A;
+  --badge-action-text: #CD001A;
   --badge-approval-bg: #FFF8DC;
   --badge-approval-text: #8A6A00;
-  --badge-fyi-bg: var(--dtn-neutral-light);
-  --badge-fyi-text: var(--dtn-neutral-dark);
+  --badge-fyi-bg: #E0E1E3;
+  --badge-fyi-text: #888B8D;
 }
 
 /* ─── TEMPLATE TOKENS: Strategy ─────────────────────────────────────────── */
@@ -334,6 +374,42 @@ body {
   --text-secondary: var(--dtn-neutral-dark);
   --text-muted: var(--dtn-neutral-mid);
   --text-on-emphasis: #FFFFFF;
+
+  .text-slide-subtitle {
+    font-size: var(--type-slide-subtitle);
+  }
+
+  .text-card-title {
+    font-size: var(--type-card-title);
+  }
+
+  .text-card-body {
+    font-size: var(--type-card-body);
+  }
+
+  .text-badge {
+    font-size: var(--type-badge);
+  }
+
+  .text-caption {
+    font-size: var(--type-caption);
+  }
+
+  .text-metric-lg {
+    font-size: var(--type-metric-large);
+  }
+
+  .text-metric-unit {
+    font-size: var(--type-metric-unit);
+  }
+
+  .text-headline {
+    font-size: var(--type-headline);
+  }
+
+  --border-default: var(--dtn-neutral-light);
+  --border-strong: var(--dtn-navy);
+  --border-muted: var(--dtn-neutral-mid);
 
   --accent-success: var(--dtn-green);
   --accent-warning: var(--dtn-orange);
@@ -357,4 +433,38 @@ body {
   --badge-approval-text: #8A6A00;
   --badge-fyi-bg: var(--dtn-neutral-light);
   --badge-fyi-text: var(--dtn-neutral-dark);
+
+  /* typography — proposed strategy scale */
+  --type-slide-title: 3rem;
+  --type-slide-subtitle: 1.35rem;
+  --type-headline: 2rem;
+  --type-card-title: 1.25rem;
+  --type-card-body: 1rem;
+  --type-metric-large: 5rem;
+  --type-metric-medium: 2.5rem;
+  --type-metric-unit: 1.35rem;
+  --type-badge: 0.85rem;
+  --type-caption: 0.85rem;
+  --font-weight-title: 800;
+  --font-weight-card-title: 700;
+
+  /* borders — strategy scale */
+  --border-width-card: 1.5px;
+  --border-width-accent: 4px;
+  --border-width-timeline: 4px;
+  --border-width-divider: 1.5px;
+  --border-radius-card: 12px;
+  --border-radius-badge: 6px;
+
+  /* spacing — strategy scale */
+  --spacing-card-padding: 1.75rem;
+  --spacing-card-gap: 1.25rem;
+  --spacing-section-gap: 2.5rem;
+  --spacing-slide-padding: 3.5rem;
+
+  /* component behavior */
+  --timeline-marker-size: 2rem;
+  --timeline-card-style: card;
+  --kpi-card-style: boxed;
+  --hero-content-position: bottom;
 }

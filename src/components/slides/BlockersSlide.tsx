@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { CheckCircle2, AlertCircle, CheckSquare, Info, MoreHorizontal, Clock, ClipboardX } from "lucide-react";
 import { LayoutSplit } from "./layouts/LayoutSplit";
 import type { LooseSlide } from "@/lib/schema";
+import { cn } from "@/lib/utils";
 
 interface BlockerItem {
     text: string;
@@ -19,19 +20,19 @@ interface BlockersData {
 
 const SEVERITY_CONFIG = {
     action: {
-        borderClass: "border-badge-action-bg border-l-[8px]",
+        borderClass: "border-badge-action-bg border-l-accent",
         badgeBg: "var(--badge-action-bg)",
         badgeText: "var(--badge-action-text)",
         label: "Action Required",
     },
     approval: {
-        borderClass: "border-badge-approval-bg border-l-[8px]",
+        borderClass: "border-badge-approval-bg border-l-accent",
         badgeBg: "var(--badge-approval-bg)",
         badgeText: "var(--badge-approval-text)",
         label: "Approval",
     },
     fyi: {
-        borderClass: "border-badge-fyi-bg border-l-[8px]",
+        borderClass: "border-badge-fyi-bg border-l-accent",
         badgeBg: "var(--badge-fyi-bg)",
         badgeText: "var(--badge-fyi-text)",
         label: "FYI",
@@ -62,8 +63,8 @@ export function BlockersSlide({ slide, deckMeta }: { slide: LooseSlide; deckMeta
             <div className="flex flex-col gap-6 relative z-10 w-full pr-8">
                 <div className="flex flex-col gap-2">
                     <h2
-                        className="font-bold text-text-on-emphasis leading-tight mt-0 mb-0 pt-0"
-                        style={{ fontSize: "clamp(32px, 4vw, 56px)" }}
+                        className="font-bold text-text-on-emphasis leading-tight mt-0 mb-0 pt-0 text-slide-subtitle"
+                        style={{ fontWeight: "var(--font-weight-title)" }}
                     >
                         {panelTitle.split(' ').length > 2 ? panelTitle : (
                             <>
@@ -72,7 +73,7 @@ export function BlockersSlide({ slide, deckMeta }: { slide: LooseSlide; deckMeta
                             </>
                         )}
                     </h2>
-                    <p className="text-text-on-emphasis opacity-90 text-sm mt-4 leading-relaxed max-w-[90%]" style={{ fontSize: "clamp(16px, 1.8vw, 20px)" }}>
+                    <p className="text-text-on-emphasis opacity-90 text-slide-subtitle mt-4 leading-relaxed max-w-[90%]">
                         Current impediments requiring leadership attention or team coordination.
                     </p>
                 </div>
@@ -94,15 +95,13 @@ export function BlockersSlide({ slide, deckMeta }: { slide: LooseSlide; deckMeta
                                 <div className="flex items-center gap-4">
                                     <Icon className="w-5 h-5 text-text-on-emphasis" />
                                     <span
-                                        className="font-medium text-text-on-emphasis opacity-80"
-                                        style={{ fontSize: "clamp(14px, 1.5vw, 18px)" }}
+                                        className="font-medium text-text-on-emphasis opacity-80 text-sm"
                                     >
                                         {label}
                                     </span>
                                 </div>
                                 <span
-                                    className="font-bold text-text-on-emphasis"
-                                    style={{ fontSize: "clamp(24px, 2.5vw, 32px)" }}
+                                    className="font-medium text-text-on-emphasis text-card-title"
                                 >
                                     {count}
                                 </span>
@@ -133,27 +132,31 @@ export function BlockersSlide({ slide, deckMeta }: { slide: LooseSlide; deckMeta
         </motion.div>
     ) : (
         <div className="flex flex-col h-full bg-surface-muted overflow-hidden">
-            <div className="flex-1 min-h-0 flex flex-col gap-4 w-full overflow-y-auto px-[clamp(24px,4vw,64px)] pt-[clamp(24px,4vw,64px)] pb-8 relative z-10">
+            <div className="flex-1 min-h-0 flex flex-col gap-4 w-full overflow-y-auto px-slide pt-slide pb-8 relative z-10">
                 {items.map((item, i) => {
                     const cfg = SEVERITY_CONFIG[item.severity] ?? SEVERITY_CONFIG.fyi;
                     return (
                         <motion.div
                             key={i}
-                            className={`bg-surface-secondary rounded-2xl shadow-md border border-border-default ${cfg.borderClass}`}
+                            className={cn(
+                                "bg-surface-secondary rounded-card shadow-md border border-border-default",
+                                cfg.borderClass
+                            )}
                             style={{
-                                padding: "clamp(20px, 3vw, 32px)"
+                                padding: "var(--spacing-card-padding)",
+                                borderWidth: "var(--border-width-card)",
+                                borderLeftWidth: "var(--border-width-accent)"
                             }}
                             initial={{ opacity: 0, y: 16 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.4, delay: 0.1 + i * 0.08 }}
+                            transition={{ duration: 0.15, delay: 0.1 + i * 0.05 }}
                         >
                             <div className="flex justify-between items-center mb-4">
                                 <span
-                                    className="font-bold uppercase tracking-wider rounded-full px-3 py-1"
+                                    className="font-bold uppercase tracking-wider rounded-badge px-3 py-0.5 text-badge"
                                     style={{
                                         background: cfg.badgeBg,
                                         color: cfg.badgeText,
-                                        fontSize: "clamp(10px, 1vw, 12px)",
                                     }}
                                 >
                                     {cfg.label}
@@ -162,8 +165,11 @@ export function BlockersSlide({ slide, deckMeta }: { slide: LooseSlide; deckMeta
                             </div>
 
                             <p
-                                className={`text-text-primary leading-tight mt-1 ${item.severity === "action" ? "font-bold" : "font-semibold"}`}
-                                style={{ fontSize: "clamp(20px, 2.2vw, 32px)" }}
+                                className={cn(
+                                    "text-text-primary leading-tight mt-1 text-card-title",
+                                    item.severity === "action" ? "font-bold" : "font-semibold"
+                                )}
+                                style={{ fontWeight: item.severity === "action" ? "var(--font-weight-title)" : "var(--font-weight-card-title)" }}
                             >
                                 {item.text}
                             </p>
@@ -198,14 +204,14 @@ export function BlockersSlide({ slide, deckMeta }: { slide: LooseSlide; deckMeta
                 })}
 
                 {items.length < 3 && items.length > 0 && (
-                    <div className="border border-dashed border-border-muted rounded-xl p-8 flex flex-col items-center justify-center gap-3 mt-4 min-h-[160px] bg-surface-muted">
+                    <div className="border border-dashed border-border-muted rounded-card p-8 flex flex-col items-center justify-center gap-3 mt-4 min-h-[160px] bg-surface-muted" style={{ borderWidth: "var(--border-width-card)" }}>
                         <ClipboardX className="w-6 h-6 text-text-muted" />
                         <span className="text-text-secondary text-sm font-medium">No additional blockers reported</span>
                     </div>
                 )}
             </div>
 
-            <div className="h-[80px] bg-surface-muted border-t border-border-default px-[clamp(24px,4vw,64px)] flex items-center justify-between shrink-0">
+            <div className="h-[80px] bg-surface-muted border-t border-border-default px-slide flex items-center justify-between shrink-0">
                 <div className="flex flex-col justify-center">
                     <span className="text-[10px] uppercase tracking-[0.15em] text-text-muted font-bold">Active Sprint</span>
                     <span className="text-sm font-bold text-text-primary">{meta.subtitle || "Sprint Phase"}</span>

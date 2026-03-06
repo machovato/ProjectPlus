@@ -5,6 +5,8 @@ import * as LucideIcons from "lucide-react";
 import { CircleDot } from "lucide-react";
 import { LayoutSplit } from "./layouts/LayoutSplit";
 import type { LooseSlide } from "@/lib/schema";
+import { cn } from "@/lib/utils";
+import { useTemplate } from "@/components/TemplateContext";
 
 interface Card {
     title: string;
@@ -54,18 +56,20 @@ function getIcon(name?: string) {
 }
 
 export function GridSlide({ slide }: { slide: LooseSlide }) {
+    const { template } = useTemplate();
     const data = (slide.data ?? { cards: [] }) as unknown as GridData;
     const cards = data.cards ?? [];
-    const cols = cards.length <= 2 ? 1 : cards.length <= 4 ? 2 : 3;
+    const isStrategy = template === "strategy";
+    const cols = isStrategy ? (cards.length <= 2 ? 1 : cards.length <= 4 ? 2 : 3) : 2;
 
     const left = (
         <div className="flex flex-col gap-4">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-text-on-emphasis opacity-60">
+            <p className="text-slide-subtitle font-semibold uppercase tracking-[0.18em] text-text-on-emphasis opacity-60">
                 Grid
             </p>
             <h2
-                className="font-bold text-text-on-emphasis leading-tight"
-                style={{ fontSize: "clamp(24px, 3vw, 42px)" }}
+                className="font-bold text-text-on-emphasis text-slide-title leading-tight"
+                style={{ fontWeight: "var(--font-weight-title)" }}
             >
                 {slide.title}
             </h2>
@@ -79,7 +83,7 @@ export function GridSlide({ slide }: { slide: LooseSlide }) {
             style={{
                 gridTemplateColumns: `repeat(${cols}, 1fr)`,
                 gridTemplateRows: `repeat(${Math.ceil(cards.length / cols)}, 1fr)`,
-                gap: "clamp(16px, 2vw, 32px)"
+                gap: "var(--spacing-card-gap)"
             }}
         >
             {cards.map((card, i) => {
@@ -87,31 +91,37 @@ export function GridSlide({ slide }: { slide: LooseSlide }) {
                 return (
                     <motion.div
                         key={i}
-                        className="bg-surface-secondary p-6 md:p-8 flex flex-col justify-center h-full border-2 border-border-default/50 shadow-md hover:shadow-xl hover:border-border-strong transition-all duration-200 ease-out hover:scale-[1.02] @container"
-                        style={{ borderRadius: "clamp(12px, 1.5vw, 24px)" }}
+                        className="bg-surface-secondary p-card flex flex-col justify-center h-full border-card shadow-md hover:shadow-xl hover:border-border-strong transition-all duration-200 ease-out hover:scale-[1.02] rounded-card @container"
+                        style={{ borderWidth: "var(--border-width-card)" }}
                         initial={{ opacity: 0, y: 12 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.4, delay: 0.1 + i * 0.07 }}
+                        transition={{ duration: 0.15, delay: 0.1 + i * 0.05 }}
                     >
                         <div
-                            className={`flex items-center justify-center mb-4 shrink-0 border border-border-default/50 ${iconData.theme.bgClass}`}
+                            className={cn(
+                                "flex items-center justify-center mb-4 shrink-0 border border-border-default/50",
+                                isStrategy ? iconData.theme.bgClass : "bg-surface-muted"
+                            )}
                             style={{
-                                width: "clamp(40px, 12cqi, 72px)",
-                                height: "clamp(40px, 12cqi, 72px)",
-                                borderRadius: "clamp(8px, 2.5cqi, 16px)"
+                                width: "clamp(32px, 10cqi, 48px)",
+                                height: "clamp(32px, 10cqi, 48px)",
+                                borderRadius: isStrategy ? "calc(var(--border-radius-card) * 0.6)" : "var(--border-radius-badge)"
                             }}
                         >
-                            {iconData.element}
+                            {!isStrategy ? (
+                                <div className="text-text-muted">
+                                    {iconData.element}
+                                </div>
+                            ) : iconData.element}
                         </div>
                         <p
-                            className="font-extrabold text-text-primary mb-2 leading-tight drop-shadow-sm"
-                            style={{ fontSize: "clamp(18px, 7.5cqi, 36px)", letterSpacing: "-0.01em" }}
+                            className="font-bold text-text-primary text-card-title mb-2 leading-tight drop-shadow-sm"
+                            style={{ fontWeight: "var(--font-weight-card-title)" }}
                         >
                             {card.title}
                         </p>
                         <p
-                            className="text-text-secondary leading-relaxed"
-                            style={{ fontSize: "clamp(13px, 4.5cqi, 20px)" }}
+                            className="text-text-secondary text-card-body leading-relaxed"
                         >
                             {card.body}
                         </p>

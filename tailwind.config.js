@@ -12,6 +12,31 @@ module.exports = {
     ],
     theme: {
         extend: {
+            fontSize: {
+                "slide-title": "var(--type-slide-title)",
+                "slide-subtitle": "var(--type-slide-subtitle)",
+                headline: "var(--type-headline)",
+                "card-title": "var(--type-card-title)",
+                "card-body": "var(--type-card-body)",
+                "metric-lg": "var(--type-metric-large)",
+                "metric-md": "var(--type-metric-medium)",
+                "metric-unit": "var(--type-metric-unit)",
+                badge: "var(--type-badge)",
+                caption: "var(--type-caption)",
+            },
+            borderWidth: {
+                card: "var(--border-width-card)",
+                accent: "var(--border-width-accent)",
+                timeline: "var(--border-width-timeline)",
+            },
+            padding: {
+                card: "var(--spacing-card-padding)",
+                slide: "var(--spacing-slide-padding)",
+            },
+            gap: {
+                card: "var(--spacing-card-gap)",
+                section: "var(--spacing-section-gap)",
+            },
             colors: {
                 /* ── Raw palette tokens ── use dtn.* names in components */
                 dtn: {
@@ -90,12 +115,14 @@ module.exports = {
                 },
             },
             fontFamily: {
-                sans: ["Inter", "system-ui", "sans-serif"],
+                sans: ["var(--font-family)", "Inter", "system-ui", "sans-serif"],
             },
             borderRadius: {
                 lg: "var(--radius)",
                 md: "calc(var(--radius) - 2px)",
                 sm: "calc(var(--radius) - 4px)",
+                card: "var(--border-radius-card)",
+                badge: "var(--border-radius-badge)",
             },
             animation: {
                 ripple: "ripple 1.5s ease-out infinite",

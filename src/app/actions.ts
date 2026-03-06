@@ -46,6 +46,43 @@ export async function publishDeck(raw: unknown): Promise<PublishResult> {
     }
 }
 
+export async function updateExistingDeck(id: string, raw: unknown): Promise<PublishResult> {
+    const parsed = LooseDeckSchema.safeParse(raw);
+    if (!parsed.success) {
+        return {
+            success: false,
+            error: parsed.error.errors
+                .map((e) => `${e.path.join(".")}: ${e.message}`)
+                .join("; "),
+        };
+    }
+
+    const deck = parsed.data;
+    const date = new Date(deck.meta.date);
+
+    try {
+        const record = await prisma.update.update({
+            where: { id },
+            data: {
+                title: deck.meta.title,
+                date,
+                template: deck.meta.template,
+                rag: deck.meta.rag ?? null,
+                content_json: JSON.stringify(deck),
+                source_raw: JSON.stringify(raw, null, 2),
+                schema_version: deck.schemaVersion,
+            },
+        });
+
+        revalidatePath("/");
+        revalidatePath(`/deck/${id}`);
+        return { success: true, id: record.id };
+    } catch (err) {
+        console.error("Update error:", err);
+        return { success: false, error: "Database error. Check your connection." };
+    }
+}
+
 export async function deleteDeck(id: string): Promise<{ success: boolean; error?: string }> {
     try {
         await prisma.update.delete({ where: { id } });

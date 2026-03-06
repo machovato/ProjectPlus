@@ -22,13 +22,13 @@ export function LayoutWhite({ children, center = true }: LayoutWhiteProps) {
                 baseRadius={80}
                 step={90}
                 color="#1B8FE0"
-                opacity={0.25}
+                opacity={0.1}
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] pointer-events-none"
             />
 
             {/* Content layer */}
             <div
-                className={`relative z-10 w-full h-full flex flex-col flex-1 px-16 ${center ? "justify-center items-center" : ""
+                className={`relative z-10 w-full h-full flex flex-col flex-1 px-slide ${center ? "justify-center items-center" : ""
                     }`}
             >
                 {children}

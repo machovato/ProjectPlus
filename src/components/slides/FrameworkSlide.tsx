@@ -5,6 +5,8 @@ import * as LucideIcons from "lucide-react";
 import { CircleDot } from "lucide-react";
 import { LayoutWhite } from "./layouts/LayoutWhite";
 import type { LooseSlide } from "@/lib/schema";
+import { cn } from "@/lib/utils";
+import { useTemplate } from "@/components/TemplateContext";
 
 interface FrameworkLane {
     title: string;
@@ -28,8 +30,10 @@ function getLucideIcon(name?: string, className?: string) {
 }
 
 export function FrameworkSlide({ slide }: { slide: LooseSlide }) {
+    const { template } = useTemplate();
     const data = (slide.data ?? { lanes: [] }) as unknown as FrameworkData;
     const lanes = data.lanes ?? [];
+    const isStrategy = template === "strategy";
 
     // Sort lanes by rank ascending so Control is 1, Influence 2, Concern 3
     const sortedLanes = [...lanes].sort((a, b) => a.rank - b.rank);
@@ -63,12 +67,12 @@ export function FrameworkSlide({ slide }: { slide: LooseSlide }) {
                             opacityProps = 1;
                         } else if (lane.type === "influence") {
                             fillProps = "bg-surface-secondary text-text-primary";
-                            borderProps = "border-[4px] border-dashed border-accent-info shadow-lg";
+                            borderProps = cn("border-[4px] shadow-lg", isStrategy ? "border-dashed border-accent-info" : "border-solid border-border-default");
                             widthProps = "w-[92%] mx-auto";
                             opacityProps = 1;
                         } else if (lane.type === "concern") {
                             fillProps = "bg-surface-page text-text-secondary";
-                            borderProps = "border-[4px] border-dotted border-border-muted shadow-md";
+                            borderProps = cn("border-[4px] shadow-md", isStrategy ? "border-dotted border-border-muted" : "border-solid border-border-muted");
                             widthProps = "w-[84%] mx-auto";
                             opacityProps = 1;
                         }
