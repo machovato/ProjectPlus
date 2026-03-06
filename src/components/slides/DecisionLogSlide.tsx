@@ -49,63 +49,69 @@ export function DecisionLogSlide({ slide }: { slide: LooseSlide }) {
     );
 
     const right = (
-        <div className="w-full overflow-auto">
-            {/* Header row */}
-            <div className="grid grid-cols-[1fr_auto_auto_auto] gap-4 pb-3 border-b border-border-default mb-1">
-                {["Decision", "Owner", "Date", "Status"].map((h) => (
-                    <span
-                        key={h}
-                        className="font-semibold uppercase tracking-wider text-text-muted"
-                        style={{ fontSize: "clamp(11px, 0.9vw, 14px)" }}
-                    >
-                        {h}
-                    </span>
-                ))}
-            </div>
+        <div className="w-full h-full flex flex-col justify-center">
+            <div className="w-full bg-surface-secondary rounded-card border border-border-default shadow-card overflow-hidden">
+                <div className="p-card overflow-auto">
+                    {/* Header row */}
+                    <div className="grid grid-cols-[1fr_auto_auto_auto] gap-4 pb-4 border-b border-border-default mb-1">
+                        {["Decision", "Owner", "Date", "Status"].map((h) => (
+                            <span
+                                key={h}
+                                className="font-bold uppercase tracking-wider text-text-secondary"
+                                style={{ fontSize: "var(--type-badge)" }}
+                            >
+                                {h}
+                            </span>
+                        ))}
+                    </div>
 
-            {/* Rows */}
-            {items.map((item, i) => {
-                const cfg = STATUS_CONFIG[item.status ?? "proposed"];
-                return (
-                    <motion.div
-                        key={i}
-                        className="grid grid-cols-[1fr_auto_auto_auto] gap-3 py-2.5 border-b border-border-default/50 last:border-0 items-start"
-                        initial={{ opacity: 0, y: 6 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.15, delay: 0.1 + i * 0.05 }}
-                    >
-                        <p
-                            className="text-text-primary font-semibold leading-snug"
-                            style={{ fontSize: "clamp(14px, 1.3vw, 20px)" }}
-                        >
-                            {item.decision}
-                        </p>
-                        <span
-                            className="text-text-secondary whitespace-nowrap pt-1"
-                            style={{ fontSize: "clamp(12px, 1vw, 16px)" }}
-                        >
-                            {item.owner ?? "—"}
-                        </span>
-                        <span
-                            className="text-text-muted whitespace-nowrap pt-1"
-                            style={{ fontSize: "clamp(12px, 1vw, 16px)" }}
-                        >
-                            {item.date ?? "—"}
-                        </span>
-                        <span
-                            className="font-bold uppercase tracking-wider px-2.5 py-1 rounded whitespace-nowrap border"
-                            style={{
-                                background: cfg.bg,
-                                color: cfg.text,
-                                borderColor: cfg.border,
-                                fontSize: "clamp(10px, 0.8vw, 13px)",
-                            }}
-                        >
-                            {cfg.label}
-                        </span>
-                    </motion.div>
-                );
-            })}
+                    {/* Rows */}
+                    <div className="flex flex-col">
+                        {items.map((item, i) => {
+                            const cfg = STATUS_CONFIG[item.status ?? "proposed"];
+                            return (
+                                <motion.div
+                                    key={i}
+                                    className="grid grid-cols-[1fr_auto_auto_auto] gap-3 py-4 border-b border-border-default/50 last:border-0 items-start"
+                                    initial={{ opacity: 0, y: 6 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.15, delay: 0.1 + i * 0.05 }}
+                                >
+                                    <p
+                                        className="text-text-primary font-semibold leading-snug"
+                                        style={{ fontSize: "var(--type-card-title)" }}
+                                    >
+                                        {item.decision}
+                                    </p>
+                                    <span
+                                        className="text-text-secondary whitespace-nowrap pt-1"
+                                        style={{ fontSize: "var(--type-card-body)" }}
+                                    >
+                                        {item.owner ?? "—"}
+                                    </span>
+                                    <span
+                                        className="text-text-muted whitespace-nowrap pt-1"
+                                        style={{ fontSize: "var(--type-card-body)" }}
+                                    >
+                                        {item.date ?? "—"}
+                                    </span>
+                                    <span
+                                        className="font-bold uppercase tracking-wider px-2.5 py-1 rounded whitespace-nowrap border"
+                                        style={{
+                                            background: cfg.bg,
+                                            color: cfg.text,
+                                            borderColor: cfg.border,
+                                            fontSize: "var(--type-badge)",
+                                        }}
+                                    >
+                                        {cfg.label}
+                                    </span>
+                                </motion.div>
+                            );
+                        })}
+                    </div>
+                </div>
+            </div>
         </div>
     );
 

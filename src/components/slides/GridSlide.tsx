@@ -91,7 +91,7 @@ export function GridSlide({ slide }: { slide: LooseSlide }) {
                 return (
                     <motion.div
                         key={i}
-                        className="bg-surface-secondary p-card flex flex-col justify-center h-full border-card shadow-md hover:shadow-xl hover:border-border-strong transition-all duration-200 ease-out hover:scale-[1.02] rounded-card @container"
+                        className="bg-surface-secondary p-card flex flex-col justify-center h-full border-card shadow-card hover:shadow-xl hover:border-border-strong transition-all duration-200 ease-out hover:scale-[1.02] rounded-card @container"
                         style={{ borderWidth: "var(--border-width-card)" }}
                         initial={{ opacity: 0, y: 12 }}
                         animate={{ opacity: 1, y: 0 }}

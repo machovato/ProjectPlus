@@ -313,30 +313,30 @@ body {
   --border-width-accent: 3px;
   --border-width-timeline: 3px;
   --border-width-divider: 1px;
-  --border-radius-card: clamp(6px, 0.8vw, 10px);
+  --border-radius-card: 12px;
   --border-radius-badge: 4px;
 
   /* Typography */
   --font-family: 'Plus Jakarta Sans', Arial, sans-serif;
-  --type-slide-title: clamp(28px, 3.5vw, 44px);
+  --type-slide-title: clamp(32px, 4vw, 56px);
   --type-slide-subtitle: clamp(14px, 1.6vw, 18px);
   --type-headline: clamp(20px, 2.5vw, 32px);
   /* Fallback for balanced scales */
-  --type-card-title: clamp(14px, 1.4vw, 18px);
-  --type-card-body: clamp(12px, 1.2vw, 15px);
-  --type-metric-large: clamp(28px, 3.5vw, 48px);
+  --type-card-title: clamp(16px, 1.8vw, 22px);
+  --type-card-body: clamp(13px, 1.4vw, 16px);
+  --type-metric-large: clamp(48px, 6vw, 84px);
   --type-metric-medium: clamp(18px, 2vw, 24px);
   --type-metric-unit: clamp(12px, 1.2vw, 16px);
-  --type-badge: clamp(9px, 0.9vw, 11px);
-  --type-caption: clamp(10px, 1vw, 12px);
+  --type-badge: clamp(10px, 1vw, 12px);
+  --type-caption: clamp(11px, 1vw, 13px);
   --font-weight-title: 700;
   --font-weight-card-title: 500;
 
   /* Spacing */
-  --spacing-card-padding: clamp(12px, 1.5vw, 20px);
-  --spacing-card-gap: clamp(8px, 1vw, 14px);
-  --spacing-section-gap: clamp(16px, 2vw, 28px);
-  --spacing-slide-padding: clamp(20px, 3vw, 40px);
+  --spacing-card-padding: clamp(16px, 2cqi, 24px);
+  --spacing-card-gap: clamp(12px, 1.5vw, 20px);
+  --spacing-section-gap: clamp(24px, 3vw, 40px);
+  --spacing-slide-padding: clamp(32px, 4vw, 60px);
 
   /* Component behavior */
   --timeline-marker-size: 1.25rem;

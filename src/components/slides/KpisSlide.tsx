@@ -42,10 +42,10 @@ export function KpisSlide({ slide }: { slide: LooseSlide }) {
     const gridCols = items.length === 3 ? 3 : 2;
 
     return (
-        <LayoutWhite center={false}>
+        <LayoutWhite center={true}>
             {/* Slide title — eyebrow style at top */}
             <motion.p
-                className="text-[11px] font-semibold uppercase tracking-[0.18em] text-accent-info mb-8 pt-10 text-center w-full"
+                className="text-[11px] font-semibold uppercase tracking-[0.18em] text-accent-info mb-8 text-center w-full"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.15 }}
@@ -62,7 +62,7 @@ export function KpisSlide({ slide }: { slide: LooseSlide }) {
                     {items.map((kpi, i) => (
                         <motion.div
                             key={i}
-                            className="flex flex-col items-center text-center gap-3 bg-surface-secondary border border-border-default rounded-card shadow-sm"
+                            className="flex flex-col items-center text-center gap-3 bg-surface-secondary border border-border-default rounded-card shadow-card"
                             style={{ padding: "var(--spacing-card-padding)" }}
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}

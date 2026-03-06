@@ -63,7 +63,7 @@ export function BlockersSlide({ slide, deckMeta }: { slide: LooseSlide; deckMeta
             <div className="flex flex-col gap-6 relative z-10 w-full pr-8">
                 <div className="flex flex-col gap-2">
                     <h2
-                        className="font-bold text-text-on-emphasis leading-tight mt-0 mb-0 pt-0 text-slide-subtitle"
+                        className="font-bold text-text-on-emphasis leading-tight mt-0 mb-0 pt-0 text-slide-title"
                         style={{ fontWeight: "var(--font-weight-title)" }}
                     >
                         {panelTitle.split(' ').length > 2 ? panelTitle : (
