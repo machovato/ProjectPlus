@@ -55,7 +55,7 @@ export function ProblemSlide({ slide }: { slide: LooseSlide }) {
         <LayoutWhite center={false}>
             <div className="w-full flex-1 flex flex-col justify-center py-12 px-slide">
                 <div className="mb-8 shrink-0">
-                    <p className="text-slide-subtitle font-semibold uppercase tracking-[0.18em] text-text-muted mb-2">
+                    <p className="text-badge font-semibold uppercase tracking-[0.18em] text-accent-info mb-2">
                         Problem Space
                     </p>
                     <h2

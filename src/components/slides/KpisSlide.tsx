@@ -21,11 +21,20 @@ interface KpisData {
 // up   = DTN Accent Lime #8DC63F  — positive performance indicator
 // down = DTN Red         #C8192B  — negative, attention needed
 // flat = DTN Neutral Mid #BCBEC0  — no significant change
-function TrendIcon({ trend }: { trend?: "up" | "down" | "flat" }) {
+function TrendBadge({ trend }: { trend?: "up" | "down" | "flat" }) {
     if (!trend) return null;
-    if (trend === "up") return <LucideIcons.TrendingUp className="w-5 h-5 text-accent-success" />;
-    if (trend === "down") return <LucideIcons.TrendingDown className="w-5 h-5 text-accent-danger" />;
-    return <LucideIcons.Minus className="w-5 h-5 text-text-muted" />;
+    const config = {
+        up: { label: "Above Target", colors: "bg-accent-success/15 text-accent-success", icon: LucideIcons.TrendingUp },
+        down: { label: "Underperform", colors: "bg-accent-danger/15 text-accent-danger", icon: LucideIcons.TrendingDown },
+        flat: { label: "Stable", colors: "bg-border-muted/30 text-text-muted", icon: LucideIcons.Minus }
+    };
+    const { label, colors, icon: Icon } = config[trend];
+    return (
+        <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${colors}`}>
+            <Icon className="w-3.5 h-3.5" strokeWidth={3} />
+            {label}
+        </div>
+    );
 }
 
 function getIcon(name?: string) {
@@ -45,7 +54,7 @@ export function KpisSlide({ slide }: { slide: LooseSlide }) {
         <LayoutWhite center={true}>
             {/* Slide title — eyebrow style at top */}
             <motion.p
-                className="text-[11px] font-semibold uppercase tracking-[0.18em] text-accent-info mb-8 text-center w-full"
+                className="text-badge font-semibold uppercase tracking-[0.18em] text-accent-info mb-8 text-center w-full"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.15 }}
@@ -56,7 +65,7 @@ export function KpisSlide({ slide }: { slide: LooseSlide }) {
             {/* KPI scoreboard — dashboard widget panel grid */}
             <div className="flex-1 flex items-center justify-center w-full px-slide pb-slide">
                 <div
-                    className="grid gap-card w-full max-w-5xl"
+                    className="grid gap-card w-full max-w-6xl mx-auto"
                     style={{ gridTemplateColumns: `repeat(${gridCols}, 1fr)` }}
                 >
                     {items.map((kpi, i) => (
@@ -81,14 +90,14 @@ export function KpisSlide({ slide }: { slide: LooseSlide }) {
                             </div>
 
                             {/* Value — scoreboard */}
-                            <div className="flex items-baseline gap-2">
+                            <div className="flex flex-col items-center gap-4">
                                 <span
                                     className="font-bold text-text-primary whitespace-nowrap text-metric-lg"
                                     style={{ lineHeight: 1 }}
                                 >
                                     {kpi.value}
                                 </span>
-                                <TrendIcon trend={kpi.trend} />
+                                <TrendBadge trend={kpi.trend} />
                             </div>
 
                             {/* Fraction Progress Bar */}

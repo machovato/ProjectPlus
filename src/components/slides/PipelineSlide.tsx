@@ -66,7 +66,7 @@ export function PipelineSlide({ slide }: { slide: LooseSlide }) {
     return (
         <LayoutWhite center={false}>
             <motion.p
-                className="text-[11px] font-semibold uppercase tracking-[0.18em] text-accent-info pt-10 pb-0 text-center w-full"
+                className="text-badge font-semibold uppercase tracking-[0.18em] text-accent-info pt-10 pb-0 text-center w-full"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.4 }}

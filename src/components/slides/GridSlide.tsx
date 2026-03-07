@@ -64,9 +64,7 @@ export function GridSlide({ slide }: { slide: LooseSlide }) {
 
     const left = (
         <div className="flex flex-col gap-4">
-            <p className="text-slide-subtitle font-semibold uppercase tracking-[0.18em] text-text-on-emphasis opacity-60">
-                Grid
-            </p>
+
             <h2
                 className="font-bold text-text-on-emphasis text-slide-title leading-tight"
                 style={{ fontWeight: "var(--font-weight-title)" }}

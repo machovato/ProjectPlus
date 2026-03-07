@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { motion } from "framer-motion";
 import * as LucideIcons from "lucide-react";
 import { LayoutBrand } from "./layouts/LayoutBrand";
@@ -48,7 +49,7 @@ export function HeroSlide({ slide }: { slide: LooseSlide }) {
             )}>
                 {/* Eyebrow */}
                 <motion.p
-                    className="font-semibold uppercase tracking-[0.18em] text-text-on-hero opacity-60 mb-5 text-badge"
+                    className="text-badge font-semibold uppercase tracking-[0.18em] text-accent-info opacity-60 mb-5"
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.15 }}
@@ -133,9 +134,15 @@ export function HeroSlide({ slide }: { slide: LooseSlide }) {
                                 whileHover={{ backgroundColor: "rgba(255,255,255,0.25)" }}
                             >
                                 <div className="flex items-center gap-2 mb-1 text-badge">
-                                    {getIcon(kpi.icon)}
+                                    {isStrategy ? getIcon(kpi.icon) : (
+                                        kpi.icon && (LucideIcons as any)[kpi.icon.charAt(0).toUpperCase() + kpi.icon.slice(1)] &&
+                                        React.createElement((LucideIcons as any)[kpi.icon.charAt(0).toUpperCase() + kpi.icon.slice(1)], { className: "w-5 h-5 text-white opacity-90" })
+                                    )}
                                     <span
-                                        className="font-semibold uppercase tracking-widest text-text-on-hero opacity-60"
+                                        className={cn(
+                                            "font-semibold uppercase tracking-widest",
+                                            isStrategy ? "text-text-on-hero opacity-60" : "text-white opacity-70"
+                                        )}
                                     >
                                         {kpi.label}
                                     </span>
@@ -143,14 +150,20 @@ export function HeroSlide({ slide }: { slide: LooseSlide }) {
                                 <div className="flex items-baseline gap-2">
                                     <span
                                         className={cn(
-                                            "text-text-on-hero font-bold",
-                                            isStrategy ? "text-metric-lg" : "text-metric-medium"
+                                            "font-bold",
+                                            isStrategy ? "text-text-on-hero text-metric-lg" : "text-white text-metric-lg"
                                         )}
                                         style={{ lineHeight: 1 }}
                                     >
                                         {kpi.value}
                                     </span>
-                                    <TrendIcon trend={kpi.trend} />
+                                    {isStrategy ? (
+                                        <TrendIcon trend={kpi.trend} />
+                                    ) : (
+                                        kpi.trend === "up" ? <LucideIcons.TrendingUp className="text-white w-5 h-5" /> :
+                                            kpi.trend === "down" ? <LucideIcons.TrendingDown className="text-white w-5 h-5" /> :
+                                                kpi.trend === "flat" ? <LucideIcons.Minus className="text-white opacity-50 w-5 h-5" /> : null
+                                    )}
                                 </div>
                                 {/* Fraction Progress Bar */}
                                 {(() => {

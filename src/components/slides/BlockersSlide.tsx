@@ -62,6 +62,9 @@ export function BlockersSlide({ slide, deckMeta }: { slide: LooseSlide; deckMeta
         <div className="flex flex-col h-full relative">
             <div className="flex flex-col gap-6 relative z-10 w-full pr-8">
                 <div className="flex flex-col gap-2">
+                    <p className="text-badge font-semibold uppercase tracking-[0.18em] text-accent-info opacity-60 mb-1">
+                        Blockers
+                    </p>
                     <h2
                         className="font-bold text-text-on-emphasis leading-tight mt-0 mb-0 pt-0 text-slide-title"
                         style={{ fontWeight: "var(--font-weight-title)" }}

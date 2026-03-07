@@ -32,7 +32,7 @@ export function DecisionLogSlide({ slide }: { slide: LooseSlide }) {
 
     const left = (
         <div className="flex flex-col gap-4">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-text-on-emphasis opacity-60">
+            <p className="text-badge font-semibold uppercase tracking-[0.18em] text-accent-info opacity-60">
                 Decision Log
             </p>
             <h2

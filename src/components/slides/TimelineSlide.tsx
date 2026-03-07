@@ -45,7 +45,7 @@ export function TimelineSlide({ slide }: { slide: LooseSlide }) {
             {/* Slide Eyebrow and Title */}
             <div className="shrink-0 text-center pt-10 pb-6 w-full relative z-10">
                 <motion.p
-                    className="text-slide-subtitle font-semibold uppercase tracking-[0.18em] text-accent-info mb-2"
+                    className="text-badge font-semibold uppercase tracking-[0.18em] text-accent-info mb-2"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.15 }}
